@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewBag.Title = "AddRoom";
+}
+
+<h2>Данные о новом кабинете </h2>
+
+<table>
+
+
+    <tr> <td>Логин:  @ViewBag.Login</td></tr>
+    <tr> <td>Пароль: @ViewBag.Password  </td></tr>
+
+    <tr> <td> <p>@Html.ActionLink("Войти", "InputRoom", "Home", new { roomNumber = @ViewBag.Login, idRoom = @ViewBag.idRoom }, null) </p></td></tr>
+   
+
+</table>
+

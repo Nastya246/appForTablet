@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="SpecialForTabletModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Врач">
+    <Key>
+      <PropertyRef Name="Id_doc" />
+    </Key>
+    <Property Name="Id_doc" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="id_cab" Type="Int32" Nullable="false" />
+    <Property Name="Фамилия" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Имя" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Отчество" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Готовность" Type="Boolean" Nullable="false" />
+    <Property Name="Должность" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Name="Квалификация" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Name="Фото" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <NavigationProperty Name="Кабинет" Relationship="Self.FK_Врач_Кабинет" FromRole="Врач" ToRole="Кабинет" />
+    <NavigationProperty Name="Пациент" Relationship="Self.FK_Пациент_Врач" FromRole="Врач" ToRole="Пациент" />
+  </EntityType>
+  <EntityType Name="Кабинет">
+    <Key>
+      <PropertyRef Name="Id_cab" />
+    </Key>
+    <Property Name="Id_cab" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Номер_кабинета" Type="Int32" Nullable="false" />
+    <Property Name="Пароль" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Врач" Relationship="Self.FK_Врач_Кабинет" FromRole="Кабинет" ToRole="Врач" />
+  </EntityType>
+  <EntityType Name="Пациент">
+    <Key>
+      <PropertyRef Name="Id_patient" />
+    </Key>
+    <Property Name="Id_patient" Type="Int32" Nullable="false" />
+    <Property Name="id_doc" Type="Int32" Nullable="false" />
+    <Property Name="Фамилия" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Name="Номер_талона" Type="Int32" />
+    <NavigationProperty Name="Врач" Relationship="Self.FK_Пациент_Врач" FromRole="Пациент" ToRole="Врач" />
+  </EntityType>
+  <Association Name="FK_Врач_Кабинет">
+    <End Role="Кабинет" Type="Self.Кабинет" Multiplicity="1" />
+    <End Role="Врач" Type="Self.Врач" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Кабинет">
+        <PropertyRef Name="Id_cab" />
+      </Principal>
+      <Dependent Role="Врач">
+        <PropertyRef Name="id_cab" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Пациент_Врач">
+    <End Role="Врач" Type="Self.Врач" Multiplicity="1" />
+    <End Role="Пациент" Type="Self.Пациент" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Врач">
+        <PropertyRef Name="Id_doc" />
+      </Principal>
+      <Dependent Role="Пациент">
+        <PropertyRef Name="id_doc" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="SpecialForTabletEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+    <EntitySet Name="Врач" EntityType="Self.Врач" />
+    <EntitySet Name="Кабинет" EntityType="Self.Кабинет" />
+    <EntitySet Name="Пациент" EntityType="Self.Пациент" />
+    <AssociationSet Name="FK_Врач_Кабинет" Association="Self.FK_Врач_Кабинет">
+      <End Role="Кабинет" EntitySet="Кабинет" />
+      <End Role="Врач" EntitySet="Врач" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Пациент_Врач" Association="Self.FK_Пациент_Врач">
+      <End Role="Врач" EntitySet="Врач" />
+      <End Role="Пациент" EntitySet="Пациент" />
+    </AssociationSet>
+    <FunctionImport Name="sp_alterdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_creatediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_dropdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagramdefinition">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagrams">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_renamediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="new_diagramname" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_upgraddiagrams" />
+  </EntityContainer>
+</Schema>

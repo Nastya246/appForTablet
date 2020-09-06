@@ -1,0 +1,35 @@
+﻿
+@{
+    ViewBag.Title = "InputRoom";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+
+
+    <h3>Выберите себя из списка:</h3><br /><br />
+   
+    <form method="post" action="SelectUser">
+
+        <table>
+
+            <tr>
+                <td>
+                    @Html.DropDownList("listDoctors", ViewBag.listDoctors as SelectList, "--Выбор пользователя--", null)
+                </td>
+                <td>  <input type="hidden" value="ViewBag.Idroom" name="idRoom" /></td>
+                <td>  <input type="hidden" value="ViewBag.room" name="roomNumber" /></td>
+            </tr>
+
+
+
+            <tr><td><input type="submit" value="Далее" /> </td><td></td></tr>
+
+            <tr> <td> <p>@Html.ActionLink("Не нашли себя в спиcке?", "AddUser", "Home", new { roomNumber = @ViewBag.room, idRoom= @ViewBag.Idroom }, null) </p></td></tr>
+        </table>
+
+    </form>
+
+</div>
+
+

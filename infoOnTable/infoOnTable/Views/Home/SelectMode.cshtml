@@ -1,0 +1,34 @@
+﻿
+@{
+    ViewBag.Title = "SelectMode";
+}
+
+<h2>Выбор режима</h2>
+
+<form method="post" action="SelectMode">
+
+    <table>
+        <tr>
+            <td>
+                @Html.RadioButton("Mode", "doctor")
+                <span>Для врача</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.RadioButton("Mode", "user")
+                <span>Для пациента</span>
+
+            </td>
+            <td>  <input type="hidden" value="ViewBag.IdRoom" name="idRoom" /></td>
+        </tr>
+
+        <tr><td><input type="submit" value="Далее" /> </td><td></td></tr>
+    </table>
+
+</form>
+
+
+
+
+

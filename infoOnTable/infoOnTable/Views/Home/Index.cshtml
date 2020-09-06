@@ -1,0 +1,40 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div>
+    <table>
+        <tr>
+            
+            <td>               
+                <h3>Чтобы продолжить, введите данные о кабинете:</h3>
+            </td>
+        </tr>
+    </table>
+
+
+    <form method="post" action="InputRoom">
+
+        <table>
+            <tr>
+                <td><p>Введите логин: </p></td>
+                <td><input type="text" name="Login" /> </td>
+            </tr>
+            <tr>
+                <td><p>Введите пароль:</p></td>
+                <td>
+                    <input type="password" name="Password" />
+                </td>
+            </tr>
+            <tr><td><input type="submit" value="Войти" /> </td><td></td></tr>
+
+        </table>
+    </form>
+    <form method="get" action="NewRoom">
+
+        <table>
+            <tr><td><input type="submit" value="Новая учетная запись" /> </td></tr>
+        </table>
+    </form>
+
+
+</div>
