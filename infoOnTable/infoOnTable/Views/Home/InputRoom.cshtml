@@ -17,8 +17,8 @@
                 <td>
                     @Html.DropDownList("listDoctors", ViewBag.listDoctors as SelectList, "--Выбор пользователя--", null)
                 </td>
-                <td>  <input type="hidden" value="ViewBag.Idroom" name="idRoom" /></td>
-                <td>  <input type="hidden" value="ViewBag.room" name="roomNumber" /></td>
+                <td>  <input type="hidden" value="@ViewBag.Idroom" name="idRoom" /></td>
+                <td>  <input type="hidden" value="@ViewBag.room" name="roomNumber" /></td>
             </tr>
 
 

@@ -5,7 +5,7 @@
 
 <h2>Выбор режима</h2>
 
-<form method="post" action="SelectMode">
+<form method="post" action="SelectModeAppForTablet">
 
     <table>
         <tr>
@@ -20,7 +20,8 @@
                 <span>Для пациента</span>
 
             </td>
-            <td>  <input type="hidden" value="ViewBag.IdRoom" name="idRoom" /></td>
+            <td>  <input type="hidden" value="@ViewBag.IdRoom" name="idRoom" /></td>
+            <td>  <input type="hidden" value="@ViewBag.IdDoctor" name="idDoctor" /></td>
         </tr>
 
         <tr><td><input type="submit" value="Далее" /> </td><td></td></tr>

@@ -86,3 +86,4 @@ D:\appInfoForTablet\infoOnTable\infoOnTable\obj\Debug\infoOnTable.csproj.CopyCom
 D:\appInfoForTablet\infoOnTable\infoOnTable\obj\Debug\infoOnTable.dll
 D:\appInfoForTablet\infoOnTable\infoOnTable\obj\Debug\infoOnTable.pdb
 D:\appInfoForTablet\infoOnTable\infoOnTable\obj\Debug\infoOnTable.csprojAssemblyReference.cache
+D:\appInfoForTablet\infoOnTable\infoOnTable\bin\ru\EntityFramework.SqlServer.resources.dll

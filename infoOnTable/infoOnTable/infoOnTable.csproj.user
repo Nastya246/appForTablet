@@ -15,6 +15,7 @@
     <WebStackScaffolding_IsReferencingScriptLibrariesSelected>False</WebStackScaffolding_IsReferencingScriptLibrariesSelected>
     <WebStackScaffolding_LayoutPageFile />
     <ProjectView>ShowAllFiles</ProjectView>
+    <WebStackScaffolding_DbContextTypeFullName>infoOnTable.Models.SpecialForTabletEntities</WebStackScaffolding_DbContextTypeFullName>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>

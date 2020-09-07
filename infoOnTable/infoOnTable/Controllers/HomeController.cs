@@ -107,7 +107,7 @@ namespace infoOnTable.Controllers
 
                   SelectList listDoctors=new SelectList(listDoctors1, "Value", "Text", selectedIndex);
                 /*    SelectList listDoctors = new SelectList(db.Врач.Where(d => d.id_cab == idRoom), "Id_doc", "Фамилия"+" "+"Имя"+" "+"Отчество", selectedIndex);*/
-                ViewBag.listDoctors = listDoctors;
+                    ViewBag.listDoctors = listDoctors;
                     ViewBag.room = roomNumber;
                     ViewBag.Idroom = idRoom;
                     return View();
@@ -216,24 +216,26 @@ namespace infoOnTable.Controllers
         }
 
         [HttpPost]
-        async public Task<ActionResult> SelectMode(string Mode, int? idRoom)
+        async public Task<ActionResult> SelectModeAppForTablet(string Mode, int idDoctor, int? idRoom)
         {
 
             if (Mode == "doctor")
             {
-
+                ViewBag.Mode = "doctor";
             }
             else if (Mode == "user")
             {
-
+                ViewBag.Mode = "user";
             }
-                return View();
+
+            var infoOnTablet = await db.Врач.FindAsync(idDoctor);
+            return View(infoOnTablet);
         }
 
         [HttpPost]
         async public Task<ActionResult> SelectUser(int listDoctors, int? idRoom)
         {
-
+            ViewBag.IdDoctor = listDoctors;
             ViewBag.IdRoom = idRoom;
             return View("SelectMode");
         }
