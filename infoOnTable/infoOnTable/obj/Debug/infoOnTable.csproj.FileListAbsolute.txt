@@ -85,5 +85,4 @@ D:\appInfoForTablet\infoOnTable\infoOnTable\bin\ru\System.Web.WebPages.Razor.res
 D:\appInfoForTablet\infoOnTable\infoOnTable\obj\Debug\infoOnTable.csproj.CopyComplete
 D:\appInfoForTablet\infoOnTable\infoOnTable\obj\Debug\infoOnTable.dll
 D:\appInfoForTablet\infoOnTable\infoOnTable\obj\Debug\infoOnTable.pdb
-D:\appInfoForTablet\infoOnTable\infoOnTable\obj\Debug\infoOnTable.csprojAssemblyReference.cache
 D:\appInfoForTablet\infoOnTable\infoOnTable\bin\ru\EntityFramework.SqlServer.resources.dll

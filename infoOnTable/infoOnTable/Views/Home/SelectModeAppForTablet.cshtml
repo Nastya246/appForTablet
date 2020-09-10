@@ -24,13 +24,15 @@
         <tr>
             <td>
                 <p>
-                    @Html.CheckBox("ready", false)
+                    <!--Html.CheckBox("ready", false)-->
+                    <input id="ready" name="ready" type="checkbox" value="false" />
+
                     @Html.DisplayName("Отметьте данное поле, если готовы принять пациента")
                 </p>
-</td>
+            </td>
         </tr>
         <tr>
-            <td><p>ФИО пациента (можно ввести либо только ФИО либо талон): </p></td>
+            <td><p>ФИО пациента (можно ввести что-то одно: ФИО или талон): </p></td>
             <td><input type="text" id="name" name="name" /> </td>
         </tr>
         <tr>
@@ -41,8 +43,53 @@
     </table>
 
     <div class="col-md-offset-2 col-md-10">
-        <input type="button" id="ready" name="ready" value="Готово" class="btn btn-default" />
+        <input type="button" id="ok" name="ok" value="Готово" class="btn btn-default" />
     </div>
+
+    <div id="infoForDoctor">
+        <br/>
+    </div>
+
+    @section scripts{
+        <script type="text/javascript">
+            $(function () {
+
+                $('#ok').click(function () {
+
+                    let info="";
+                    if ($('#ready').is(':checked')) {
+                  //      info = "true" + "/" + $('#name').val() + "/" + $('#number').val();
+                        info = "true";
+                    }
+                    else {
+                  //      info = "false" + "/" + $('#name').val() + "/" + $('#number').val();
+                        info = "false";
+                    }
+                    
+                    var data = JSON.stringify({
+                        'info': info,
+                        'name': $('#name').val(),
+                        'number': $('#number').val(),
+                        'idDoctor': @ViewBag.idDoctor,
+                        'idRoom': @ViewBag.idRoom
+                    });
+                       $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("infoForPatien")',
+                        data: data,
+                        contentType: 'application/json',
+                        success: function (data) {
+
+                            // заменяем содержимое присланным частичным представлением
+                            $('#infoForDoctor').replaceWith(data);
+                           }
+                        
+                    });
+
+                });
+            })
+        </script>
+    }
 }
 
 else if (ViewBag.Mode == "user")
@@ -50,15 +97,3 @@ else if (ViewBag.Mode == "user")
 
 }
 
-@section scripts{
-    <script type="text/javascript">
-        $(function () {
-
-            $('#ready').click(function () {
-
-                console.log('1');
-
-            });
-        })
-    </script>
-}

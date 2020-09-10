@@ -10,7 +10,7 @@ namespace infoOnTable.Controllers
 {
     public class HomeController : Controller
     {
-        private SpecialForTabletEntities db = new  SpecialForTabletEntities();
+        private SpecialForTabletEntities db = new SpecialForTabletEntities();
 
         public ActionResult Index()
         {
@@ -18,7 +18,7 @@ namespace infoOnTable.Controllers
             return View(); //стартовая стр авторизации
         }
 
-        
+
         [HttpPost]
         public ActionResult Index(string Error)
         {
@@ -26,7 +26,7 @@ namespace infoOnTable.Controllers
             return View(); //возврат на дом. стр. если ошибка данных
         }
         public ActionResult NewRoom()
-        {                       
+        {
 
             return View();
 
@@ -39,30 +39,30 @@ namespace infoOnTable.Controllers
             if ((numberRoom != null)) //проверка, что введены все данные
             {
                 //проверим числа ли ввели
-                string str = numberRoom.Trim(); 
+                string str = numberRoom.Trim();
                 int numRoom;
                 bool isNum = int.TryParse(str, out numRoom);
 
                 // действие если строка - число
                 if (isNum)
-                {                   
+                {
                     // проверим, есть ли уже такой кабинет в бд                  
-                    var room =  db.Кабинет.ToList();
+                    var room = db.Кабинет.ToList();
                     foreach (var el in room)
                     {
-                        if (el.Номер_кабинета == numRoom) return View ("Exist");
-                        
+                        if (el.Номер_кабинета == numRoom) return View("Exist");
+
                     }
-                    var passw= numRoom.ToString() + "room";
+                    var passw = numRoom.ToString() + "room";
                     Кабинет кабинет = new Кабинет();
                     кабинет.Номер_кабинета = numRoom;
-                   
+
                     кабинет.Пароль = passw;
 
-                    db.Кабинет.Add(кабинет); 
+                    db.Кабинет.Add(кабинет);
                     await db.SaveChangesAsync();
 
-                   
+
                     ViewBag.Login = numRoom;
                     ViewBag.Password = passw;
                     ViewBag.idRoom = кабинет.Id_cab;
@@ -76,8 +76,8 @@ namespace infoOnTable.Controllers
                     // действие если строка - не число
 
                     return View("Error");
-                 
-                }                                       
+
+                }
             }
             else
             {
@@ -93,26 +93,26 @@ namespace infoOnTable.Controllers
             if (roomNumber != null)
             {
 
-                 
-                    //список врачей из кабинета
-                    int selectedIndex = 0;
+
+                //список врачей из кабинета
+                int selectedIndex = 0;
 
 
-                    var listDoctors1 = db.Врач.Where(d => d.id_cab == idRoom).Select(d => new
-                    {
-                        Text = d.Фамилия + " " + d.Имя+" "+d.Отчество+" "+d.Должность,
-                        Value = d.Id_doc});
+                var listDoctors1 = db.Врач.Where(d => d.id_cab == idRoom).Select(d => new
+                {
+                    Text = d.Фамилия + " " + d.Имя + " " + d.Отчество + " " + d.Должность,
+                    Value = d.Id_doc });
 
-                   // ViewBag.listDoctors = new SelectList(listDoctors, "Value", "Text");
+                // ViewBag.listDoctors = new SelectList(listDoctors, "Value", "Text");
 
-                  SelectList listDoctors=new SelectList(listDoctors1, "Value", "Text", selectedIndex);
+                SelectList listDoctors = new SelectList(listDoctors1, "Value", "Text", selectedIndex);
                 /*    SelectList listDoctors = new SelectList(db.Врач.Where(d => d.id_cab == idRoom), "Id_doc", "Фамилия"+" "+"Имя"+" "+"Отчество", selectedIndex);*/
-                    ViewBag.listDoctors = listDoctors;
-                    ViewBag.room = roomNumber;
-                    ViewBag.Idroom = idRoom;
-                    return View();
+                ViewBag.listDoctors = listDoctors;
+                ViewBag.room = roomNumber;
+                ViewBag.Idroom = idRoom;
+                return View();
 
-                             
+
             }
             return View();
         }
@@ -135,7 +135,7 @@ namespace infoOnTable.Controllers
                     if (room.Count() > 0)
                     {
                         //список врачей из кабинета
-                              int selectedIndex = 0;
+                        int selectedIndex = 0;
 
                         //     SelectList listDoctors = new SelectList(db.Врач.Where(d => d.id_cab == room.FirstOrDefault().Id_cab), "Id_doc", "Фамилия", selectedIndex);
 
@@ -157,13 +157,13 @@ namespace infoOnTable.Controllers
                     {
                         return View("Error");
                     }
-                  
+
                 }
                 else
                 {
                     return View("Error");
-                }             
-               
+                }
+
             }
             else
             {
@@ -172,7 +172,7 @@ namespace infoOnTable.Controllers
         }
 
         [HttpGet]
-        public ActionResult AddUser(int? roomNumber , int? idRoom )
+        public ActionResult AddUser(int? roomNumber, int? idRoom)
         {
 
             ViewBag.room = roomNumber.ToString();
@@ -184,7 +184,7 @@ namespace infoOnTable.Controllers
         [HttpPost]
         async public Task<ActionResult> AddUser(string LastName, string FirstName, string Otchectvo, string Position, string Grade, HttpPostedFileBase Foto, int? Room, int? idRoom)
         {
-         
+
             Врач doctors = new Врач();
             doctors.Фамилия = LastName.TrimEnd();
             doctors.Имя = FirstName.TrimEnd();
@@ -196,23 +196,23 @@ namespace infoOnTable.Controllers
 
             Кабинет room = await db.Кабинет.FindAsync(idRoom);
 
-            if (Foto!= null)
+            if (Foto != null)
             {
                 // получаем имя файла
-              //  string fileName = System.IO.Path.GetFileName(upload.FileName);
+                //  string fileName = System.IO.Path.GetFileName(upload.FileName);
                 // сохраняем файл в папку Files в проекте
-           //     upload.SaveAs(Server.MapPath("~/Files/" + fileName));
+                //     upload.SaveAs(Server.MapPath("~/Files/" + fileName));
             }
 
             room.Врач.Add(doctors);
-                         
+
             await db.SaveChangesAsync();
 
             ViewBag.IdRoom = idRoom;
 
             return View("SelectMode");
-            
-          
+
+
         }
 
         [HttpPost]
@@ -222,6 +222,8 @@ namespace infoOnTable.Controllers
             if (Mode == "doctor")
             {
                 ViewBag.Mode = "doctor";
+                ViewBag.idDoctor = idDoctor;
+                ViewBag.idRoom = (int)idRoom;
             }
             else if (Mode == "user")
             {
@@ -233,11 +235,48 @@ namespace infoOnTable.Controllers
         }
 
         [HttpPost]
-        async public Task<ActionResult> SelectUser(int listDoctors, int? idRoom)
+        public ActionResult SelectUser(int listDoctors, int? idRoom)
         {
             ViewBag.IdDoctor = listDoctors;
             ViewBag.IdRoom = idRoom;
             return View("SelectMode");
+        }
+
+       [HttpPost]
+        public async Task<ActionResult> infoForPatien(string info, string name, string number, int idRoom, int idDoctor)
+        { ///выставить ограничения на число пациентов/пациента? //добавить хранение фото врача
+
+            var doctor = await db.Врач.FindAsync(idDoctor);
+
+            if (info.Contains("false"))
+            {
+                doctor.Готовность = false;
+            }
+            else if (info.Contains("true"))
+            {
+                doctor.Готовность = true;
+                var patient = new Пациент();
+                int id = 0;
+
+                while(await db.Пациент.FindAsync(id)!=null)
+                {
+                    id++;                  
+                }
+
+                patient.Id_patient = id;
+                if (name != null && name != "") patient.Фамилия = name;
+                else patient.Фамилия = "";
+
+                if (number != null && number != "") patient.Номер_талона = Convert.ToInt32(number);
+                else patient.Номер_талона = null;
+                db.Пациент.Add(patient);
+                doctor.Пациент.Add(patient);
+
+                await db.SaveChangesAsync();
+            }
+
+
+            return PartialView();
         }
     }
 }
