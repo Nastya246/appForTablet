@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using infoOnTable.Models;
 using System.Threading.Tasks;
+using System.Data.Entity;
+using System.Data.Entity.Validation;
 
 namespace infoOnTable.Controllers
 {
@@ -218,19 +220,26 @@ namespace infoOnTable.Controllers
         [HttpPost]
         async public Task<ActionResult> SelectModeAppForTablet(string Mode, int idDoctor, int? idRoom)
         {
+            var infoOnTablet = await db.Врач.FindAsync(idDoctor);
+            ViewBag.idDoctor = idDoctor;
+            ViewBag.idRoom = (int)idRoom;
 
             if (Mode == "doctor")
             {
                 ViewBag.Mode = "doctor";
-                ViewBag.idDoctor = idDoctor;
-                ViewBag.idRoom = (int)idRoom;
+                
             }
             else if (Mode == "user")
             {
+                
+                var room = await db.Кабинет.FindAsync((int)idRoom);
+                ViewBag.Room = room.Номер_кабинета;
                 ViewBag.Mode = "user";
+
+
             }
 
-            var infoOnTablet = await db.Врач.FindAsync(idDoctor);
+           
             return View(infoOnTablet);
         }
 
@@ -242,39 +251,74 @@ namespace infoOnTable.Controllers
             return View("SelectMode");
         }
 
-       [HttpPost]
-        public async Task<ActionResult> infoForPatien(string info, string name, string number, int idRoom, int idDoctor)
-        { ///выставить ограничения на число пациентов/пациента? //добавить хранение фото врача
+        [HttpPost]
+        public async Task<ActionResult> infoOnTablet(int idRoom, int idDoctor)
+        {  
 
             var doctor = await db.Врач.FindAsync(idDoctor);
+            var room = await db.Кабинет.FindAsync(idRoom);
+            ViewBag.Room = room.Номер_кабинета;
 
+
+            return PartialView(doctor);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> infoForPatien(string info, string name, string number, int idRoom, int idDoctor)
+        {  //добавить хранение фото врача
+
+            var doctor = await db.Врач.FindAsync(idDoctor);
+            bool ex = false;
             if (info.Contains("false"))
             {
                 doctor.Готовность = false;
+                ViewBag.color = "red";
+                ViewBag.infoForDoctor = "Установлен статус - \"Идет прием\". Отметьте поле сверху, когда станете готовы принять следующего пациента и нажмите кнопку";
             }
             else if (info.Contains("true"))
             {
                 doctor.Готовность = true;
-                var patient = new Пациент();
-                int id = 0;
+                Пациент patient;
+                string str = "";
 
-                while(await db.Пациент.FindAsync(id)!=null)
+                if (db.Пациент.FirstOrDefault() != null)
                 {
-                    id++;                  
+                    patient = db.Пациент.FirstOrDefault();
+                    ex = true;
+                }
+                else
+                {
+                    patient = new Пациент();
+
+                    patient.Id_patient = 0;
                 }
 
-                patient.Id_patient = id;
                 if (name != null && name != "") patient.Фамилия = name;
-                else patient.Фамилия = "";
+                else patient.Фамилия = "";             
 
                 if (number != null && number != "") patient.Номер_талона = Convert.ToInt32(number);
                 else patient.Номер_талона = null;
-                db.Пациент.Add(patient);
-                doctor.Пациент.Add(patient);
 
-                await db.SaveChangesAsync();
+                str += patient.Фамилия + " " + patient.Номер_талона;
+
+                if (!ex)
+                {
+                    db.Пациент.Add(patient);
+                    doctor.Пациент.Add(patient);
+                }
+                else
+                {
+                    db.Entry(patient).State = EntityState.Modified;
+                }
+
+              
+                
+                ViewBag.infoForDoctor = "Установлен статус - \"Входите\". Не забудьте снять отметку, после того, как пациент зайдет в кабинет (и нажать кнопку) - это покажет другим пациентам, что идет прием. Информация о "+str+" "+"появилась на планшете";
             }
 
+            db.Entry(doctor).State = EntityState.Modified;
+
+            await db.SaveChangesAsync();
 
             return PartialView();
         }

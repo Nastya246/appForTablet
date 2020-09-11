@@ -272,6 +272,7 @@
     <Content Include="Views\Home\SelectMode.cshtml" />
     <Content Include="Views\Home\SelectModeAppForTablet.cshtml" />
     <Content Include="Views\Home\infoForPatien.cshtml" />
+    <Content Include="Views\Home\infoOnTablet.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

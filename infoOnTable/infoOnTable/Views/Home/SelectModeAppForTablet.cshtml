@@ -27,7 +27,7 @@
                     <!--Html.CheckBox("ready", false)-->
                     <input id="ready" name="ready" type="checkbox" value="false" />
 
-                    @Html.DisplayName("Отметьте данное поле, если готовы принять пациента")
+                    @Html.DisplayName("Можно входить" )
                 </p>
             </td>
         </tr>
@@ -47,7 +47,7 @@
     </div>
 
     <div id="infoForDoctor">
-        <br/>
+        <br />
     </div>
 
     @section scripts{
@@ -65,7 +65,7 @@
                   //      info = "false" + "/" + $('#name').val() + "/" + $('#number').val();
                         info = "false";
                     }
-                    
+
                     var data = JSON.stringify({
                         'info': info,
                         'name': $('#name').val(),
@@ -83,7 +83,7 @@
                             // заменяем содержимое присланным частичным представлением
                             $('#infoForDoctor').replaceWith(data);
                            }
-                        
+
                     });
 
                 });
@@ -94,6 +94,108 @@
 
 else if (ViewBag.Mode == "user")
 {
+    <h2>Данные о приеме</h2>
 
+    <div id="infoForPatient">
+        <table>
+            <tr>
+                <td>
+                    К @ViewBag.Room
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    ПРИЕМ ВЕДЕТ
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>
+                    @Model.Фамилия.ToUpper()
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    @Model.Имя
+                </td>
+                <td>
+                    @Model.Отчество
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <small>@Model.Должность</small>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <small>@Model.Квалификация</small>
+                </td>
+            </tr>
+
+            <tr>
+                <td> <br /></td>
+            </tr>
+
+
+            <tr>
+                <td>пациент</td>
+                <td>@Model.Пациент.First().Фамилия</td>
+                <td>@Model.Пациент.First().Номер_талона</td>
+            </tr>
+
+            <tr>
+                <td> <br /></td>
+            </tr>
+
+            <tr>
+                <td>статус</td>
+                @if (@Model.Готовность)
+                {
+                    <td>ВХОДИТЕ</td>
+                }
+                else
+                {
+                    <td>ИДЕТ ПРИЕМ</td>
+                }
+            </tr>
+
+        </table>
+    </div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+        <script type="text/javascript">
+
+            window.setInterval(function () {
+
+                console.log('1');
+
+                  var data = JSON.stringify({                       
+                        'idDoctor': @ViewBag.idDoctor,
+                        'idRoom': @ViewBag.idRoom
+                    });
+                       $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("infoOnTablet")',
+                        data: data,
+                        contentType: 'application/json',
+                        success: function (data) {
+
+                            // заменяем содержимое присланным частичным представлением
+                            $('#infoForPatient').replaceWith(data);
+                           }
+
+                    });
+            }, 7000);
+               
+
+        </script>
+    }
 }
 

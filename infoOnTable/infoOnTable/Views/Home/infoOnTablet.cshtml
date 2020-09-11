@@ -1,0 +1,75 @@
+﻿@model infoOnTable.Models.Врач
+
+<div id="infoForPatient">
+    <table>
+        <tr>
+            <td>
+                К @ViewBag.Room
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                ПРИЕМ ВЕДЕТ
+            </td>
+        </tr>
+
+
+        <tr>
+            <td>
+                @Model.Фамилия.ToUpper()
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                @Model.Имя
+            </td>
+            <td>
+                @Model.Отчество
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <small>@Model.Должность</small>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <small>@Model.Квалификация</small>
+            </td>
+        </tr>
+
+        <tr>
+            <td> <br /></td>
+        </tr>
+
+    </table>
+
+    <table>
+    <tr>
+        <td>пациент</td>
+        <td>@Model.Пациент.First().Фамилия</td>
+        <td>@Model.Пациент.First().Номер_талона</td>
+    </tr>
+
+    <tr>
+        <td> <br /></td>
+    </tr>
+
+    <tr>
+        <td>статус</td>
+        @if (@Model.Готовность)
+        {
+            <td>ВХОДИТЕ</td>
+        }
+        else
+        {
+            <td>ИДЕТ ПРИЕМ</td>
+        }
+    </tr>
+
+    </table>
+</div>
