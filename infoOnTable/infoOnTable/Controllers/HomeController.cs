@@ -7,6 +7,8 @@ using infoOnTable.Models;
 using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
+using System.IO;
+//using ImageDbApp.Models;
 
 namespace infoOnTable.Controllers
 {
@@ -76,13 +78,14 @@ namespace infoOnTable.Controllers
                 else
                 {
                     // действие если строка - не число
-
+                    ViewBag.InfoError = "Номер кабинета должен содержать только цифры!";
                     return View("Error");
 
                 }
             }
             else
             {
+                ViewBag.InfoError = "Введены не все данные!";
                 return View("Error");
             }
 
@@ -157,18 +160,21 @@ namespace infoOnTable.Controllers
                     }
                     else
                     {
+                        ViewBag.InfoError = "Такого кабинета в базе нет либо введен неверный пароль!";
                         return View("Error");
                     }
 
                 }
                 else
                 {
+                    ViewBag.InfoError = "Номер кабинета должен содержать только цифры!";
                     return View("Error");
                 }
 
             }
             else
             {
+                ViewBag.InfoError = "Введены не все данные!";
                 return View("Error");
             }
         }
@@ -184,7 +190,7 @@ namespace infoOnTable.Controllers
         }
 
         [HttpPost]
-        async public Task<ActionResult> AddUser(string LastName, string FirstName, string Otchectvo, string Position, string Grade, HttpPostedFileBase Foto, int? Room, int? idRoom)
+         public ActionResult AddUser(string LastName, string FirstName, string Otchectvo, string Position, string Grade, HttpPostedFileBase Foto, int? Room, int? idRoom)
         {
 
             Врач doctors = new Врач();
@@ -193,24 +199,28 @@ namespace infoOnTable.Controllers
             doctors.Отчество = Otchectvo.TrimEnd();
             doctors.Должность = Position.TrimEnd();
             doctors.Квалификация = Grade.TrimEnd();
-            doctors.Готовность = false;
-            db.Врач.Add(doctors);
+            doctors.Готовность = true;
+           
 
-            Кабинет room = await db.Кабинет.FindAsync(idRoom);
+            Кабинет room = db.Кабинет.Find(idRoom);
 
             if (Foto != null)
             {
-                // получаем имя файла
-                //  string fileName = System.IO.Path.GetFileName(upload.FileName);
-                // сохраняем файл в папку Files в проекте
-                //     upload.SaveAs(Server.MapPath("~/Files/" + fileName));
-            }
+                byte[] imageData = null;
 
+                using (var binaryReader = new BinaryReader(Foto.InputStream))
+                {
+                    imageData = binaryReader.ReadBytes(Foto.ContentLength);
+                }
+                doctors.Фото = imageData;
+            }
+            db.Врач.Add(doctors);
             room.Врач.Add(doctors);
 
-            await db.SaveChangesAsync();
+            db.SaveChanges();
 
             ViewBag.IdRoom = idRoom;
+            ViewBag.IdDoctor = doctors.Id_doc;
 
             return View("SelectMode");
 
@@ -244,11 +254,19 @@ namespace infoOnTable.Controllers
         }
 
         [HttpPost]
-        public ActionResult SelectUser(int listDoctors, int? idRoom)
+        public ActionResult SelectUser(int? listDoctors, int? idRoom)
         {
-            ViewBag.IdDoctor = listDoctors;
-            ViewBag.IdRoom = idRoom;
-            return View("SelectMode");
+            if (listDoctors != null)
+            {
+                ViewBag.IdDoctor = listDoctors;
+                ViewBag.IdRoom = idRoom;
+                return View("SelectMode");
+            }
+            else
+            {
+                ViewBag.InfoError = "Вы не выбрали пользователя!";
+                return View("Error");
+            }
         }
 
         [HttpPost]
@@ -272,25 +290,30 @@ namespace infoOnTable.Controllers
             if (info.Contains("false"))
             {
                 doctor.Готовность = false;
-                ViewBag.color = "red";
-                ViewBag.infoForDoctor = "Установлен статус - \"Идет прием\". Отметьте поле сверху, когда станете готовы принять следующего пациента и нажмите кнопку";
+               
             }
             else if (info.Contains("true"))
             {
                 doctor.Готовность = true;
+            }  
                 Пациент patient;
                 string str = "";
 
-                if (db.Пациент.FirstOrDefault() != null)
+                if (db.Пациент.Where(p=>p.id_doc==idDoctor).FirstOrDefault() != null)
                 {
-                    patient = db.Пациент.FirstOrDefault();
+                    patient = db.Пациент.Where(p => p.id_doc == idDoctor).FirstOrDefault();
                     ex = true;
                 }
                 else
                 {
+                    int id = 0;
                     patient = new Пациент();
-
-                    patient.Id_patient = 0;
+                    while (await db.Пациент.FindAsync(id)!=null)
+                    {
+                        id++;
+                    }
+                                       
+                    patient.Id_patient = id;
                 }
 
                 if (name != null && name != "") patient.Фамилия = name;
@@ -311,10 +334,15 @@ namespace infoOnTable.Controllers
                     db.Entry(patient).State = EntityState.Modified;
                 }
 
-              
-                
-                ViewBag.infoForDoctor = "Установлен статус - \"Входите\". Не забудьте снять отметку, после того, как пациент зайдет в кабинет (и нажать кнопку) - это покажет другим пациентам, что идет прием. Информация о "+str+" "+"появилась на планшете";
+            if (info.Contains("false"))
+            {
+                ViewBag.infoForDoctor = "Установлен статус - \"Идет прием\". Отметьте поле сверху, когда станете готовы принять следующего пациента и нажмите кнопку";
             }
+            else if (info.Contains("true"))
+            {
+                ViewBag.infoForDoctor = "Установлен статус - \"Входите\". Не забудьте снять отметку, после того, как пациент зайдет в кабинет (и нажать кнопку) - это покажет другим пациентам, что идет прием. Информация о " + str + " " + "появилась на планшете";
+            }
+            
 
             db.Entry(doctor).State = EntityState.Modified;
 

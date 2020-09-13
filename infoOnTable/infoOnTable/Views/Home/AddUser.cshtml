@@ -5,51 +5,53 @@
 
 <div>
 
+
     <h3>Введите свои данные</h3>
 
-    <form method="post" action="AddUser">
-        <table>
-            <tr>
-                <td>Фамилия:</td>
-                <td><input type="text" name="LastName" /></td>
-            </tr>
-            <tr>
-                <td>Имя:  </td>
-                <td><input type="text" name="FirstName" /></td>
-            </tr>
-            <tr>
-                <td>
-                    Отчество: 
-                </td>
-                <td><input type="text" name="Otchectvo" /></td>
-            </tr>
-            <tr>
-                <td>
-                    Должность: 
-                </td>
-                <td><input type="text" name="Position" /></td>
-            </tr>
-            <tr>
-                <td>
-                    Квалификация: 
-                </td>
-                <td><input type="text" name="Grade" /></td>
-            </tr>
-            <tr>
-                <td>
-                    Выбор фото:
-                </td>
-                <td><input type="file" name="Foto" multiple accept="image/*,image/jpeg"/></td>
+    @using (Html.BeginForm("AddUser", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
 
-                <td>  <input type="hidden" value="@ViewBag.room" name="Room" /></td>
-                <td>  <input type="hidden" value="@ViewBag.IdRoom" name="idRoom" /></td>
-            </tr>
+            <table>
+                <tr>
+                    <td>Фамилия:</td>
+                    <td><input type="text" name="LastName" /></td>
+                </tr>
+                <tr>
+                    <td>Имя:  </td>
+                    <td><input type="text" name="FirstName" /></td>
+                </tr>
+                <tr>
+                    <td>
+                        Отчество:
+                    </td>
+                    <td><input type="text" name="Otchectvo" /></td>
+                </tr>
+                <tr>
+                    <td>
+                        Должность:
+                    </td>
+                    <td><input type="text" name="Position" /></td>
+                </tr>
+                <tr>
+                    <td>
+                        Квалификация:
+                    </td>
+                    <td><input type="text" name="Grade" /></td>
+                </tr>
+                <tr>
+                    <td>
+                        Выбор фото:
+                    </td>
+                    <td><input type="file" name="Foto" accept="image/*" /></td>
 
-            <tr><td><input type="submit" value="Далее" /> </td><td></td></tr>
-        </table>
+                    <td>  <input type="hidden" value="@ViewBag.room" name="Room" /></td>
+                    <td>  <input type="hidden" value="@ViewBag.IdRoom" name="idRoom" /></td>
+                </tr>
 
-    </form>
+                <tr><td><input type="submit" value="Далее" /> </td><td></td></tr>
+            </table>
+    }
 
-</div>
+    </div>
 
 

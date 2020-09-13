@@ -43,24 +43,38 @@
         </tr>
 
         <tr>
+            <td>
+                @if (Model.Фото != null)
+                {
+                    @Html.Raw("<img style='width:380px; height:480px;' src=\"data:image/jpeg;base64,"
+                                    + Convert.ToBase64String(Model.Фото) + "\" />");
+                }
+                </td>
+        </tr>
+        <tr>
             <td> <br /></td>
         </tr>
 
     </table>
 
     <table>
-    <tr>
-        <td>пациент</td>
-        <td>@Model.Пациент.First().Фамилия</td>
-        <td>@Model.Пациент.First().Номер_талона</td>
-    </tr>
+        <tr>
+            <td>пациент </td>
+            <td></td>
+            @if (Model.Пациент.Count() != 0)
+            {
+                <td>@Model.Пациент.First().Фамилия</td>
+                <td>@Model.Пациент.First().Номер_талона</td>
+            }
+        </tr>
 
     <tr>
         <td> <br /></td>
     </tr>
 
     <tr>
-        <td>статус</td>
+        <td>статус </td>
+        <td></td>
         @if (@Model.Готовность)
         {
             <td>ВХОДИТЕ</td>
