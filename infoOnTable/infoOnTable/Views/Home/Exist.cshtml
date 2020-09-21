@@ -11,9 +11,18 @@
 
 
     <tr> <td>Вернитесь на главную и введите пароль от существующего кабинета, либо зарегистрируйте новый кабинет</td></tr>
-    
 
-    <tr> <td> <p>@Html.ActionLink("Главная", "Index", "Home", null, null) </p></td></tr>
+
+
+    <tr>
+        <td>
+            <form method="post" action="~/Home/Index">
+
+                <input type="submit" value="Главная" />
+
+            </form>
+        </td>
+    </tr>
 
 
 </table>
